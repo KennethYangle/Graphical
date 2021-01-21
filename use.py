@@ -52,6 +52,7 @@ class TestMinimax():
     def test_ce_2(self):
         """
         Example Chicken game: https://www.cs.rutgers.edu/~mlittman/topics/nips02/nips02/greenwald.ps
+        Explain: https://zhuanlan.zhihu.com/p/20018642
         """
         A = [[6, 6], [2, 7],
                 [7, 2], [0, 0]]
@@ -73,6 +74,19 @@ class TestMinimax():
         probs = sol["x"]
         print("test_ce_3:\n{}".format(probs))
 
+    def test_ce_4(self):
+        """
+        Example Rock-paper-scissors game: https://www.cs.duke.edu/courses/fall16/compsci570/LPandGames.pdf
+        """
+        A = [[0, 0], [-1, 1], [1, -1],
+             [1, -1], [0, 0], [-1, 1],
+             [-1, 1], [1, -1], [0, 0]]
+        A = np.array(A)
+        lp = LinProg(verbose=True)
+        sol = lp.ce(A=A, solver="glpk")
+        probs = sol["x"]
+        print("test_ce_4:\n{}".format(probs))
+
 
 if __name__ == "__main__":
     tt = TestMinimax()
@@ -82,3 +96,4 @@ if __name__ == "__main__":
     tt.test_ce_1()
     tt.test_ce_2()
     tt.test_ce_3()
+    tt.test_ce_4()

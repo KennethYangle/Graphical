@@ -47,10 +47,24 @@ class Swarm:
         return G
 
 
+class Unit(Drone):
+    def __init__(self, drone, id, category=""):
+        self.parent_id = drone.id
+        self.camp = drone.camp
+        self.mu = drone.mu
+        self.sigma = drone.sigma
+        self.position = drone.position
+        self.id = id
+        if drone.camp == "Interceptor":
+            self.category = "Worker"
+        elif drone.camp == "Hostile":
+            self.category = "Task"
+
+
 class List(Swarm):
-    def __init__(self, swarm, listtype=""):
+    def __init__(self, swarm, category=""):
         # base
-        self.num = swarm.num
+        self.parent_num = swarm.num
         self.camp = swarm.camp
         self.area = swarm.area
         self.sigma = swarm.sigma
@@ -59,22 +73,22 @@ class List(Swarm):
         if self.camp == "Interceptor":
             self.G0 = swarm.G0
 
-        self.listtype = listtype
+        self.category = category
         self.units = list()
-        self.num_unit = 0
+        self.num = 0
 
     def __str__(self):
-        prt = "List: {}\n".format(self.listtype)
+        prt = "List: {}\n".format(self.category)
         prt += "[units]:\n"
         prt += "\n".join([d.__str__() for d in self.units])
         prt += "\n"
         return prt
 
     def ConstructGraph(self):
-        G = [[0 for i in range(self.num_unit)] for j in range(self.num_unit)]
-        for i in range(self.num_unit):
+        G = [[0 for i in range(self.num)] for j in range(self.num)]
+        for i in range(self.num):
             G[i][i] = 1
-            for j in range(i+1, self.num_unit):
+            for j in range(i+1, self.num):
                 d = np.linalg.norm(self.units[i].position - self.units[j].position)
                 if d < self.R:
                     G[i][j] = G[j][i] = 1

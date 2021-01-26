@@ -1,5 +1,5 @@
 import numpy as np
-from swarms import Drone, Swarm, List
+from swarms import Drone, Swarm, Unit, List
 
 class Algorithm:
     def __init__(self):
@@ -10,30 +10,46 @@ class Algorithm:
         len_H = len(H.drones)
         T = List(H, "Task")
         W = List(I, "Worker")
-        W.num_unit = T.num_unit = max(len_I, len_H)
+        W.num = T.num = max(len_I, len_H)
 
         if len_I == len_H:
-            T.units = H.drones
-            W.units = I.drones
+            # T.units = H.drones
+            for d in H.drones:
+                T.units.append(Unit(d, d.id, "Task"))
+            # W.units = I.drones
+            for d in I.drones:
+                W.units.append(Unit(d, d.id, "Worker"))
         elif len_I < len_H:
             t = (len_H - 1) // len_I + 1
-            T.units = H.drones
+            # T.units = H.drones
+            for d in H.drones:
+                T.units.append(Unit(d, d.id, "Task"))
+            cnt = 0
             for k in range(t):
                 for i in range(len_I):
-                    W.units.append(I.drones[i])     # Here is shallow copy, CAUTION !!!
-                    if len(W.units) >= len_H:
+                    W.units.append(Unit(I.drones[i], cnt, "Worker"))
+                    cnt += 1
+                    if cnt >= len_H:
                         break
-                if len(W.units) >= len_H:
+                if cnt >= len_H:
                         break
         else:
             t = (len_I - 1) // len_H + 1
+            cnt = 0
             for k in range(t):
                 for i in range(len_H):
-                    T.units.append(H.drones[i])
-                    if len(T.units) >= len_I:
+                    T.units.append(Unit(H.drones[i], cnt, "Task"))
+                    cnt += 1
+                    if cnt >= len_I:
                         break
-                if len(T.units) >= len_I:
+                if cnt >= len_I:
                         break
-            W.units = I.drones
+            # W.units = I.drones
+            for d in I.drones:
+                W.units.append(Unit(d, d.id, "Worker"))
 
         return T, W
+
+    def GetNeighborhood(self, T, W, G):
+        # calc WLs in dronei
+        pass

@@ -5,7 +5,7 @@ if random_seed < 0:
 np.random.seed(random_seed)
 print("random_seed: {}".format(random_seed))
 
-from swarms import Drone, Swarm, List
+from swarms import Drone, Swarm, Unit, List
 from algorithm import Algorithm
 
 class GTA:
@@ -20,6 +20,7 @@ class GTA:
         print(self.WL)
         self.G = self.WL.ConstructGraph()
         print(self.G)
+        self.algs.GetNeighborhood(self.TL, self.WL, self.G)
 
     def main(self):
         from plot import Theater

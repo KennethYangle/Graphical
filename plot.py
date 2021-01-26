@@ -13,8 +13,8 @@ class Theater:
             self.ax.scatter(t.position[0], t.position[1], t.position[2], marker="*")
         for w in self.gta.WL.units:
             self.ax.scatter(w.position[0], w.position[1], w.position[2], marker="o")
-        for i in range(self.gta.WL.num_unit):
-            for j in range(i+1, self.gta.WL.num_unit):
+        for i in range(self.gta.WL.num):
+            for j in range(i+1, self.gta.WL.num):
                 if self.gta.G[i][j] == 1:
                     self.ax.plot([self.gta.WL.units[i].position[0], self.gta.WL.units[j].position[0]], 
                                  [self.gta.WL.units[i].position[1], self.gta.WL.units[j].position[1]], 

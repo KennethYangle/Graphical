@@ -55,6 +55,8 @@ class Unit(Drone):
         self.sigma = drone.sigma
         self.position = drone.position
         self.id = id
+        self.NWL = list()
+        self.NTL = list()
         if drone.camp == "Interceptor":
             self.category = "Worker"
         elif drone.camp == "Hostile":
@@ -76,6 +78,7 @@ class List(Swarm):
         self.category = category
         self.units = list()
         self.num = 0
+        self.center = np.array([0., 0., 0.])
 
     def __str__(self):
         prt = "List: {}\n".format(self.category)

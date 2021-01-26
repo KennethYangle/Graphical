@@ -11,7 +11,7 @@ from algorithm import Algorithm
 class GTA:
     def __init__(self):
         self.IS = Swarm(10, camp="Interceptor", area=[[0,0,10],[50,50,50]])
-        self.HS = Swarm(22, camp="Hostile", area=[[100,100,10],[150,150,50]])
+        self.HS = Swarm(10, camp="Hostile", area=[[100,100,10],[150,150,50]])
         print(self.IS)
         print(self.HS)
         self.algs = Algorithm()

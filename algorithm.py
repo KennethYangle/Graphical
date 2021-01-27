@@ -85,7 +85,13 @@ class Algorithm:
                 t["payoff"] = M - np.linalg.norm(W.units[i].position - T.units[t["id"]].position)
             print("NeighborTL {}: {}".format(i, W.units[i].NTL))
 
+    def CalcCE(self, u):
+        pass
+
     def SolveGG(self, T, W):
         for i in range(W.num):
             W.units[i].cohesion = np.linalg.norm(W.units[i].position - W.center)
         W.units.sort(key=lambda x: (x.cohesion))
+
+        for i in range(W.num):
+            self.CalcCE(W.units[i])

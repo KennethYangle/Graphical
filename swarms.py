@@ -61,6 +61,7 @@ class Unit(Drone):
             self.category = "Worker"
         elif drone.camp == "Hostile":
             self.category = "Task"
+        self.cohesion = 0.
 
 
 class List(Swarm):

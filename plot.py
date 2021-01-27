@@ -11,8 +11,11 @@ class Theater:
     def render(self):
         for t in self.gta.TL.units:
             self.ax.scatter(t.position[0], t.position[1], t.position[2], marker="*")
+            self.ax.text(t.position[0], t.position[1], t.position[2], t.id)
         for w in self.gta.WL.units:
             self.ax.scatter(w.position[0], w.position[1], w.position[2], marker="o")
+            self.ax.text(w.position[0], w.position[1], w.position[2], w.id)
+        self.ax.scatter(self.gta.WL.center[0], self.gta.WL.center[1], self.gta.WL.center[2], marker="^")
         for i in range(self.gta.WL.num):
             for j in range(i+1, self.gta.WL.num):
                 if self.gta.G[i][j] == 1:

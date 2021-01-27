@@ -50,7 +50,7 @@ class Algorithm:
 
         return T, W
 
-    def GetNeighborhood(self, T, W, G):
+    def GetNeighborhood(self, T, W):
         pos_sum = np.array([0., 0., 0.])
         for i in range(W.num):
             pos_sum += W.units[i].position
@@ -65,7 +65,7 @@ class Algorithm:
         for i in range(W.num):
             for j in range(W.num):
                 if W.G[i][j] == 1:
-                    W.units[i].NWL.append(j)
+                    W.units[i].NWL.append({"id":j})
             print("NeighborWL {}: {}".format(i, W.units[i].NWL))
 
         # calc NWLs in uniti
@@ -76,5 +76,16 @@ class Algorithm:
             for j in range(T.num):
                 di = T.units[j].position - W.units[i].position
                 if di.dot(direction) / np.linalg.norm(di) > 0.99:   # cos theta
-                    W.units[i].NTL.append(j)
+                    W.units[i].NTL.append({"id":j})
             print("NeighborTL {}: {}".format(i, W.units[i].NTL))
+
+    def CalcPayoff(self, T, W, M):
+        for i in range(W.num):
+            for t in W.units[i].NTL:
+                t["payoff"] = M - np.linalg.norm(W.units[i].position - T.units[t["id"]].position)
+            print("NeighborTL {}: {}".format(i, W.units[i].NTL))
+
+    def SolveGG(self, T, W):
+        for i in range(W.num):
+            W.units[i].cohesion = np.linalg.norm(W.units[i].position - W.center)
+        W.units.sort(key=lambda x: (x.cohesion))

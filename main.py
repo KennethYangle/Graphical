@@ -23,7 +23,6 @@ class GTA:
         self.algs.GetNeighborhood(self.TL, self.WL)
         self.algs.CalcPayoff(self.TL, self.WL, M=200)
         self.algs.SolveGG(self.TL, self.WL)
-        print(self.WL)
 
     def main(self):
         from plot import Theater

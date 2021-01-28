@@ -1,6 +1,7 @@
 import numpy as np
 from swarms import Drone, Swarm, Unit, List
 from itertools import permutations
+from collections import deque
 
 class Algorithm:
     def __init__(self):
@@ -76,7 +77,7 @@ class Algorithm:
         for i in range(W.num):
             for j in range(T.num):
                 di = T.units[j].position - W.units[i].position
-                if di.dot(direction) / np.linalg.norm(di) > 0.99:   # cos theta
+                if di.dot(direction) / np.linalg.norm(di) > 0.98:   # cos theta
                     W.units[i].NTL_central.append({"id":j})
                 if di.dot(direction) / np.linalg.norm(di) > 0.95:   # cos theta
                     W.units[i].NTL.append({"id":j})
@@ -102,7 +103,7 @@ class Algorithm:
                     if tl["id"] == u.NTL_central[v]["id"]:
                         ulocal += tl["payoff"]
                         break
-            print("unit {}: p: {}, ulocal: {}".format(u.id, p, ulocal))
+            # print("unit {}: p: {}, ulocal: {}".format(u.id, p, ulocal))
             if ulocal > maxv:
                 maxv = ulocal
                 maxp = p
@@ -120,5 +121,40 @@ class Algorithm:
         W.units.sort(key=lambda x: (x.cohesion))
         print(W)
 
+        root = TreeNode(W.units[0])
+        open_table = deque()
+        open_table.append(root)
+        close_table = []
+        while len(open_table) != 0:
+            r = open_table.popleft()
+            close_table.append(r)
+            for i in range(W.num):
+                tmpid = W.units[i].id
+                if W.G[r.val.id][tmpid] == 1 and tmpid not in [a.val.id for a in close_table] and tmpid not in [a.val.id for a in open_table]:
+                    c = TreeNode(W.units[i], children=list())
+                    r.children.append(c)
+                    open_table.append(c)
+                    print("node {} got unit {}".format(r.val.id, tmpid))
+            print(r.val.id, [c.val.id for c in r.children])
+
+        # View Tree Struct
+        stash = deque()
+        stash.append(root)
+        while len(stash) != 0:
+            r = stash.popleft()
+            print("node {}:".format(r.val.id), end=" ")
+            for c in r.children:
+                stash.append(c)
+                print(c.val.id, end=", ")
+            print()
+
+        # direct allocation
+        print("<-- direct allocation -->")
         for i in range(W.num):
             self.CalcCE(W.units[i], W)
+
+
+class TreeNode:
+    def __init__(self, val=None, children=list()):
+        self.val = val
+        self.children = children

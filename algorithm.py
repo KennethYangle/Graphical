@@ -1,5 +1,6 @@
 import numpy as np
 from swarms import Drone, Swarm, Unit, List
+from itertools import permutations
 
 class Algorithm:
     def __init__(self):
@@ -68,7 +69,7 @@ class Algorithm:
                     W.units[i].NWL.append({"id":j})
             print("NeighborWL {}: {}".format(i, W.units[i].NWL))
 
-        # calc NWLs in uniti
+        # calc NTLs in uniti
         direction = T.center - W.center
         direction /= np.linalg.norm(direction)
         print("direction: {}".format(direction))
@@ -76,7 +77,10 @@ class Algorithm:
             for j in range(T.num):
                 di = T.units[j].position - W.units[i].position
                 if di.dot(direction) / np.linalg.norm(di) > 0.99:   # cos theta
+                    W.units[i].NTL_central.append({"id":j})
+                if di.dot(direction) / np.linalg.norm(di) > 0.95:   # cos theta
                     W.units[i].NTL.append({"id":j})
+            print("NeighborTL_central {}: {}".format(i, W.units[i].NTL_central))
             print("NeighborTL {}: {}".format(i, W.units[i].NTL))
 
     def CalcPayoff(self, T, W, M):
@@ -85,13 +89,36 @@ class Algorithm:
                 t["payoff"] = M - np.linalg.norm(W.units[i].position - T.units[t["id"]].position)
             print("NeighborTL {}: {}".format(i, W.units[i].NTL))
 
-    def CalcCE(self, u):
-        pass
+    def CalcCE(self, u: Unit, W):
+        per = permutations([i for i in range(len(u.NTL_central))], len(u.NWL))  # p[i] means u.NWL[i]["id"] choose u.NTL_central[p[i]]
+        maxv = -1e10
+        maxp = None
+        for p in per:
+            ulocal = 0
+            for i, v in enumerate(p):
+                # find payoff
+                # print(W.units[u.NWL[i]["id"]].NTL)
+                for tl in W.units[u.NWL[i]["id"]].NTL:
+                    if tl["id"] == u.NTL_central[v]["id"]:
+                        ulocal += tl["payoff"]
+                        break
+            print("unit {}: p: {}, ulocal: {}".format(u.id, p, ulocal))
+            if ulocal > maxv:
+                maxv = ulocal
+                maxp = p
+
+        for i in range(len(u.NWL)):
+            if u.NWL[i]["id"] == u.id:
+                idx = i
+
+        if maxp is not None:
+            print("unit {} choose task {}".format(u.id, maxp[idx]))
 
     def SolveGG(self, T, W):
         for i in range(W.num):
             W.units[i].cohesion = np.linalg.norm(W.units[i].position - W.center)
         W.units.sort(key=lambda x: (x.cohesion))
+        print(W)
 
         for i in range(W.num):
-            self.CalcCE(W.units[i])
+            self.CalcCE(W.units[i], W)

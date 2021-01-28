@@ -57,6 +57,7 @@ class Unit(Drone):
         self.id = id
         self.NWL = list()
         self.NTL = list()
+        self.NTL_central  = list()
         if drone.camp == "Interceptor":
             self.category = "Worker"
         elif drone.camp == "Hostile":

@@ -121,6 +121,13 @@ class Algorithm:
         W.units.sort(key=lambda x: (x.cohesion))
         print(W)
 
+        # Direct allocation
+        print("<-- direct allocation -->")
+        for i in range(W.num):
+            self.CalcCE(W.units[i], W)
+
+
+        # Tree Graphical allocation
         root = TreeNode(W.units[0])
         open_table = deque()
         open_table.append(root)
@@ -147,11 +154,6 @@ class Algorithm:
                 stash.append(c)
                 print(c.val.id, end=", ")
             print()
-
-        # direct allocation
-        print("<-- direct allocation -->")
-        for i in range(W.num):
-            self.CalcCE(W.units[i], W)
 
 
 class TreeNode:

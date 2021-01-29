@@ -115,6 +115,42 @@ class Algorithm:
         if maxp is not None:
             print("unit {} choose task {}".format(u.id, maxp[idx]))
 
+    def CalcCETree(self, r, W):
+        nodes = [r]
+        for c in r.children:
+            nodes.append(c)
+        tasks = [a["id"] for a in r.val.NTL_central]
+        if r.parent_select in tasks:
+            tasks.remove(r.parent_select)
+
+        per = permutations([i for i in range(len(tasks))], len(nodes))  # p[i] means u.NWL[i]["id"] choose u.NTL_central[p[i]]
+        maxv = -1e10
+        maxp = None
+        for p in per:
+            ulocal = 0
+            for i, v in enumerate(p):
+                # find payoff
+                # print(W.units[u.NWL[i]["id"]].NTL)
+                is_found = False
+                for w in W.units:
+                    if w.id == nodes[i].val.id:
+                        for tl in w.NTL:
+                            if tl["id"] == tasks[v]:
+                                ulocal += tl["payoff"]
+                                is_found = True
+                                break
+                        if is_found:
+                            break
+            # print("unit {}: p: {}, ulocal: {}".format(u.id, p, ulocal))
+            if ulocal > maxv:
+                maxv = ulocal
+                maxp = p
+
+        if maxp is not None:
+            print("unit {} choose task {}".format(r.val.id, maxp[0]))
+
+        return maxp[0]
+
     def SolveGG(self, T, W):
         for i in range(W.num):
             W.units[i].cohesion = np.linalg.norm(W.units[i].position - W.center)
@@ -153,6 +189,18 @@ class Algorithm:
             for c in r.children:
                 stash.append(c)
                 print(c.val.id, end=", ")
+            print()
+
+        # Solve Tree
+        stash = deque()
+        stash.append(root)
+        root.parent_select = -1
+        while len(stash) != 0:
+            r = stash.popleft()
+            r_select = self.CalcCETree(r, W)
+            for c in r.children:
+                c.parent_select = r_select
+                stash.append(c)
             print()
 
 

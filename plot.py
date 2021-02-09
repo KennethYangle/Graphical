@@ -2,12 +2,45 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 from main import GTA
+from collections import deque
 
 class Theater:
     def __init__(self, gta):
         self.gta = gta
         self.fig = plt.figure(1)
         self.ax = plt.axes(projection='3d')
+
+    def view_graph(self):
+        for i in range(self.gta.WL.num):
+            for j in range(i+1, self.gta.WL.num):
+                if self.gta.G[i][j] == 1:
+                    self.ax.plot([self.gta.WL.units[i].position[0], self.gta.WL.units[j].position[0]], 
+                                 [self.gta.WL.units[i].position[1], self.gta.WL.units[j].position[1]], 
+                                 [self.gta.WL.units[i].position[2], self.gta.WL.units[j].position[2]],
+                                 color='gray')
+
+    def view_tree(self):
+        root = self.gta.algs.tree
+        stash = deque()
+        stash.append(root)
+        while len(stash) != 0:
+            r = stash.popleft()
+            print("node {}:".format(r.val.id), end=" ")
+            for c in r.children:
+                stash.append(c)
+                self.ax.plot([r.val.position[0], c.val.position[0]], 
+                             [r.val.position[1], c.val.position[1]], 
+                             [r.val.position[2], c.val.position[2]],
+                             color='gray')
+
+
+    def view_result(self, results):
+        for line in results:
+            self.ax.plot([line[0].position[0], line[1].position[0]],
+                         [line[0].position[1], line[1].position[1]],
+                         [line[0].position[2], line[1].position[2]])
+
+
     def render(self):
         for t in self.gta.TL.units:
             self.ax.scatter(t.position[0], t.position[1], t.position[2], marker="*")
@@ -16,12 +49,11 @@ class Theater:
             self.ax.scatter(w.position[0], w.position[1], w.position[2], marker="o")
             self.ax.text(w.position[0], w.position[1], w.position[2], w.id)
         self.ax.scatter(self.gta.WL.center[0], self.gta.WL.center[1], self.gta.WL.center[2], marker="^")
-        for i in range(self.gta.WL.num):
-            for j in range(i+1, self.gta.WL.num):
-                if self.gta.G[i][j] == 1:
-                    self.ax.plot([self.gta.WL.units[i].position[0], self.gta.WL.units[j].position[0]], 
-                                 [self.gta.WL.units[i].position[1], self.gta.WL.units[j].position[1]], 
-                                 [self.gta.WL.units[i].position[2], self.gta.WL.units[j].position[2]])
+        
+        # self.view_graph()
+        self.view_tree()
+        # self.view_result(self.gta.algs.direct_result)
+        self.view_result(self.gta.algs.tree_result)
 
         self.ax.set_xlabel('X')
         self.ax.set_ylabel('Y')

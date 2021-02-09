@@ -115,6 +115,8 @@ class Algorithm:
         if maxp is not None:
             print("unit {} choose task {}".format(u.id, maxp[idx]))
 
+            return maxp[idx]
+
     def CalcCETree(self, r, W):
         nodes = [r]
         for c in r.children:
@@ -158,12 +160,16 @@ class Algorithm:
         print(W)
 
         # Direct allocation
+        self.direct_result = list()
         print("<-- direct allocation -->")
         for i in range(W.num):
-            self.CalcCE(W.units[i], W)
+            u_select = self.CalcCE(W.units[i], W)
+            if u_select is not None:
+                self.direct_result.append([W.units[i], T.units[u_select]])
 
 
         # Tree Graphical allocation
+        self.tree_result = list()
         root = TreeNode(W.units[0])
         open_table = deque()
         open_table.append(root)
@@ -181,6 +187,7 @@ class Algorithm:
             print(r.val.id, [c.val.id for c in r.children])
 
         # View Tree Struct
+        self.tree = root
         stash = deque()
         stash.append(root)
         while len(stash) != 0:
@@ -198,10 +205,11 @@ class Algorithm:
         while len(stash) != 0:
             r = stash.popleft()
             r_select = self.CalcCETree(r, W)
+            self.tree_result.append([r.val, T.units[r_select]])
             for c in r.children:
                 c.parent_select = r_select
                 stash.append(c)
-            print()
+        print()
 
 
 class TreeNode:

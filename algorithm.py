@@ -123,8 +123,9 @@ class Algorithm:
             nodes.append(c)
         tasks = [a["id"] for a in r.val.NTL_central]
         print(r.val.id, tasks)
-        if r.parent_select in tasks:
-            tasks.remove(r.parent_select)
+        for sel in r.parent_select:
+            if sel in tasks:
+                tasks.remove(sel)
 
         per = permutations([i for i in range(len(tasks))], len(nodes))  # p[i] means u.NWL[i]["id"] choose u.NTL_central[p[i]]
         maxv = -1e10
@@ -205,14 +206,15 @@ class Algorithm:
         # Solve Tree
         stash = deque()
         stash.append(root)
-        root.parent_select = -1
+        root.parent_select = []
         while len(stash) != 0:
             r = stash.popleft()
             r_select = self.CalcCETree(r, W)
             if r_select is not None:
                 self.tree_result.append([r.val, T.units[r_select]])
             for c in r.children:
-                c.parent_select = r_select
+                c.parent_select = r.parent_select
+                c.parent_select.append(r_select)
                 stash.append(c)
         print()
 

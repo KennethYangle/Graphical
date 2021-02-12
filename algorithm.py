@@ -77,7 +77,7 @@ class Algorithm:
         for i in range(W.num):
             for j in range(T.num):
                 di = T.units[j].position - W.units[i].position
-                if di.dot(direction) / np.linalg.norm(di) > 0.98:   # cos theta
+                if di.dot(direction) / np.linalg.norm(di) > 0.997:   # cos theta
                     W.units[i].NTL_central.append({"id":j})
                 if di.dot(direction) / np.linalg.norm(di) > 0.95:   # cos theta
                     W.units[i].NTL.append({"id":j})
@@ -122,6 +122,7 @@ class Algorithm:
         for c in r.children:
             nodes.append(c)
         tasks = [a["id"] for a in r.val.NTL_central]
+        print(r.val.id, tasks)
         if r.parent_select in tasks:
             tasks.remove(r.parent_select)
 
@@ -150,8 +151,7 @@ class Algorithm:
 
         if maxp is not None:
             print("unit {} choose task {}".format(r.val.id, maxp[0]))
-
-        return maxp[0]
+            return maxp[0]
 
     def SolveGG(self, T, W):
         for i in range(W.num):
@@ -159,16 +159,17 @@ class Algorithm:
         W.units.sort(key=lambda x: (x.cohesion))
         print(W)
 
-        # Direct allocation
-        self.direct_result = list()
-        print("<-- direct allocation -->")
-        for i in range(W.num):
-            u_select = self.CalcCE(W.units[i], W)
-            if u_select is not None:
-                self.direct_result.append([W.units[i], T.units[u_select]])
+        # # Direct allocation
+        # self.direct_result = list()
+        # print("<-- direct allocation -->")
+        # for i in range(W.num):
+        #     u_select = self.CalcCE(W.units[i], W)
+        #     if u_select is not None:
+        #         self.direct_result.append([W.units[i], T.units[u_select]])
 
 
         # Tree Graphical allocation
+        self.max_tree_width = 5
         self.tree_result = list()
         root = TreeNode(W.units[0])
         open_table = deque()
@@ -177,12 +178,15 @@ class Algorithm:
         while len(open_table) != 0:
             r = open_table.popleft()
             close_table.append(r)
+            cnt = 0
             for i in range(W.num):
                 tmpid = W.units[i].id
                 if W.G[r.val.id][tmpid] == 1 and tmpid not in [a.val.id for a in close_table] and tmpid not in [a.val.id for a in open_table]:
                     c = TreeNode(W.units[i], children=list())
                     r.children.append(c)
                     open_table.append(c)
+                    cnt += 1
+                    if cnt >= self.max_tree_width: break
                     print("node {} got unit {}".format(r.val.id, tmpid))
             print(r.val.id, [c.val.id for c in r.children])
 
@@ -205,7 +209,8 @@ class Algorithm:
         while len(stash) != 0:
             r = stash.popleft()
             r_select = self.CalcCETree(r, W)
-            self.tree_result.append([r.val, T.units[r_select]])
+            if r_select is not None:
+                self.tree_result.append([r.val, T.units[r_select]])
             for c in r.children:
                 c.parent_select = r_select
                 stash.append(c)

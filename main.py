@@ -10,8 +10,8 @@ from algorithm import Algorithm
 
 class GTA:
     def __init__(self):
-        self.IS = Swarm(10, camp="Interceptor", area=[[0,0,10],[50,50,50]])
-        self.HS = Swarm(10, camp="Hostile", area=[[100,100,10],[150,150,50]])
+        self.IS = Swarm(50, camp="Interceptor", area=[[0,0,20],[100,100,100]])
+        self.HS = Swarm(50, camp="Hostile", area=[[200,200,20],[400,400,100]])
         print(self.IS)
         print(self.HS)
         self.algs = Algorithm()

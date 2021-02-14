@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.lib.function_base import _parse_input_dimensions
 from swarms import Drone, Swarm, Unit, List
 from itertools import permutations
 from collections import deque
@@ -122,10 +123,12 @@ class Algorithm:
         for c in r.children:
             nodes.append(c)
         tasks = [a["id"] for a in r.val.NTL_central]
-        print(r.val.id, tasks)
+        print("before", r.val.id, tasks)
+        print("parent_select", r.parent_select)
         for sel in r.parent_select:
             if sel in tasks:
                 tasks.remove(sel)
+        print("after", r.val.id, tasks)
 
         per = permutations([i for i in range(len(tasks))], len(nodes))  # p[i] means u.NWL[i]["id"] choose u.NTL_central[p[i]]
         maxv = -1e10
@@ -151,8 +154,8 @@ class Algorithm:
                 maxp = p
 
         if maxp is not None:
-            print("unit {} choose task {}".format(r.val.id, maxp[0]))
-            return maxp[0]
+            print("unit {} choose task {}".format(r.val.id, tasks[maxp[0]]))
+            return tasks[maxp[0]]
 
     def SolveGG(self, T, W):
         for i in range(W.num):
@@ -207,14 +210,22 @@ class Algorithm:
         stash = deque()
         stash.append(root)
         root.parent_select = []
+        previous_select = []
         while len(stash) != 0:
             r = stash.popleft()
+            # # global share
+            # r.parent_select = previous_select
             r_select = self.CalcCETree(r, W)
             if r_select is not None:
                 self.tree_result.append([r.val, T.units[r_select]])
+                previous_select.append(r_select)
             for c in r.children:
-                c.parent_select = r.parent_select
-                c.parent_select.append(r_select)
+                # # parent share
+                # c.parent_select = r.parent_select
+                # c.parent_select.append(r_select)
+
+                # local share
+                c.parent_select = previous_select
                 stash.append(c)
         print()
 

@@ -129,6 +129,13 @@ class Algorithm:
             if sel in tasks:
                 tasks.remove(sel)
         print("after", r.val.id, tasks)
+        # extend field of view
+        if tasks == []:
+            tasks = [a["id"] for a in r.val.NTL]
+            for sel in r.parent_select:
+                if sel in tasks:
+                    tasks.remove(sel)
+            print("after-after", r.val.id, tasks)
 
         per = permutations([i for i in range(len(tasks))], len(nodes))  # p[i] means u.NWL[i]["id"] choose u.NTL_central[p[i]]
         maxv = -1e10

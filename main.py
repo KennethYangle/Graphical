@@ -8,6 +8,10 @@ print("random_seed: {}".format(random_seed))
 from swarms import Drone, Swarm, Unit, List
 from algorithm import Algorithm
 
+import sys
+from logger import Logger
+sys.stdout = Logger()
+
 class GTA:
     def __init__(self):
         self.IS = Swarm(50, camp="Interceptor", area=[[0,0,20],[100,100,100]])

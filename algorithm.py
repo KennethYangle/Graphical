@@ -78,7 +78,7 @@ class Algorithm:
         for i in range(W.num):
             for j in range(T.num):
                 di = T.units[j].position - W.units[i].position
-                if di.dot(direction) / np.linalg.norm(di) > 0.997:   # cos theta
+                if di.dot(direction) / np.linalg.norm(di) > 0.9975:   # cos theta
                     W.units[i].NTL_central.append({"id":j})
                 if di.dot(direction) / np.linalg.norm(di) > 0.95:   # cos theta
                     W.units[i].NTL.append({"id":j})

@@ -97,5 +97,16 @@ class List(Swarm):
                 d = np.linalg.norm(self.units[i].position - self.units[j].position)
                 if d < self.R:
                     G[i][j] = G[j][i] = 1
+            # check isolate dot
+            cnt = 0
+            for j in range(self.num):
+                if G[i][j] == 1:
+                    cnt += 1
+                    break
+            if cnt <= 2:    # isolate
+                for j in range(self.num):
+                    d = np.linalg.norm(self.units[i].position - self.units[j].position)
+                    if d < 1.2*self.R:
+                        G[i][j] = G[j][i] = 1
         self.G = G
         return G

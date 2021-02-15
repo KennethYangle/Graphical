@@ -80,7 +80,7 @@ class Algorithm:
                 di = T.units[j].position - W.units[i].position
                 if di.dot(direction) / np.linalg.norm(di) > 0.9975:   # cos theta
                     W.units[i].NTL_central.append({"id":j})
-                if di.dot(direction) / np.linalg.norm(di) > 0.95:   # cos theta
+                if di.dot(direction) / np.linalg.norm(di) > 0.985:   # cos theta
                     W.units[i].NTL.append({"id":j})
             print("NeighborTL_central {}: {}".format(i, W.units[i].NTL_central))
             print("NeighborTL {}: {}".format(i, W.units[i].NTL))
@@ -130,7 +130,8 @@ class Algorithm:
                 tasks.remove(sel)
         print("after", r.val.id, tasks)
         # extend field of view
-        if tasks == []:
+        # print("len_tasks: {}, len_nodes: {}".format(len(tasks), len(nodes)))
+        if len(tasks) < len(nodes):
             tasks = [a["id"] for a in r.val.NTL]
             for sel in r.parent_select:
                 if sel in tasks:
@@ -180,7 +181,7 @@ class Algorithm:
 
 
         # Tree Graphical allocation
-        self.max_tree_width = 5
+        self.max_tree_width = 4
         self.tree_result = list()
         root = TreeNode(W.units[0])
         open_table = deque()
@@ -232,7 +233,8 @@ class Algorithm:
                 # c.parent_select.append(r_select)
 
                 # local share
-                c.parent_select = previous_select
+                c.parent_select = previous_select           # reference
+                # c.parent_select = previous_select.copy()    # shallow copy
                 stash.append(c)
         print()
 

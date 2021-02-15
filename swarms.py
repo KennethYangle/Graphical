@@ -106,7 +106,7 @@ class List(Swarm):
             if cnt <= 2:    # isolate
                 for j in range(self.num):
                     d = np.linalg.norm(self.units[i].position - self.units[j].position)
-                    if d < 1.2*self.R:
+                    if d < 1.1*self.R:
                         G[i][j] = G[j][i] = 1
         self.G = G
         return G

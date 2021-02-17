@@ -3,12 +3,14 @@ import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 from main import GTA
 from collections import deque
+from RflySim.rflyshow import RFly
 
 class Theater:
     def __init__(self, gta):
         self.gta = gta
         self.fig = plt.figure(1)
         self.ax = plt.axes(projection='3d')
+        self.rfly = RFly()
 
     def view_graph(self):
         for i in range(self.gta.WL.num):
@@ -61,3 +63,4 @@ class Theater:
         # self.ax.set_ylim(-50, 100)
         self.fig.savefig("1.png", dpi=600)
         plt.show()
+        self.rfly.render(self.gta.WL.getPositionsList())

@@ -110,3 +110,6 @@ class List(Swarm):
                         G[i][j] = G[j][i] = 1
         self.G = G
         return G
+
+    def getPositionsList(self):
+        return [u.position for u in self.units]

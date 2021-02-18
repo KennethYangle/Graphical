@@ -33,7 +33,10 @@ class RFly:
         self.mav.sendUE4Cmd(b'RflyCameraPosAng 0.3 0 0.05 0 0 0',0)
         time.sleep(0.5)
 
-    def render(self, positions):
-        print("positions", positions)
-        for i in range(len(positions)):
-            self.mav.sendUE4Pos(i, 3, 0, -positions[i], [0,0,0])
+    def render(self, WL_positions, TL_positions):
+        print("WL_positions", WL_positions)
+        for i in range(len(WL_positions)):
+            self.mav.sendUE4Pos(i, 3, 0, [WL_positions[i][0],WL_positions[i][1],-WL_positions[i][2]], [0,0,0])
+        print("TL_positions", TL_positions)
+        for i in range(len(TL_positions)):
+            self.mav.sendUE4Pos(100+i, 5, 0, [TL_positions[i][0],TL_positions[i][1],-TL_positions[i][2]], [0,0,0])

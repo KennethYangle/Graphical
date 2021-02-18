@@ -42,15 +42,12 @@ class RFly:
                     np.arctan2(-end[2] + start[2], np.linalg.norm([end[0] - start[0], end[1] - start[1]])), 
                     np.arctan2(end[1] - start[1], end[0] - start[0])]
         Scale = [np.linalg.norm(start - end), 0.1, 0.1]
-        print("PosE", PosE)
-        print("AngEuler", AngEuler)
-        print("Scale", Scale)
         self.mav.sendUE4PosScale(id, 207, 0, PosE, AngEuler, Scale)
 
-    def render(self, WL_positions, TL_positions, results):
+    def render(self, WL_positions, TL_positions, init_yaw, results):
         print("WL_positions", WL_positions)
         for i in range(len(WL_positions)):
-            self.mav.sendUE4Pos(i, 3, 0, WL_positions[i], [0,0,0])
+            self.mav.sendUE4Pos(i, 3, 0, WL_positions[i], [0,0,init_yaw])
         print("TL_positions", TL_positions)
         for i in range(len(TL_positions)):
             self.mav.sendUE4Pos(100+i, 5, 0, TL_positions[i], [0,0,0])

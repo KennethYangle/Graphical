@@ -72,15 +72,15 @@ class Algorithm:
             print("NeighborWL {}: {}".format(i, W.units[i].NWL))
 
         # calc NTLs in uniti
-        direction = T.center - W.center
-        direction /= np.linalg.norm(direction)
-        print("direction: {}".format(direction))
+        self.direction = T.center - W.center
+        self.direction /= np.linalg.norm(self.direction)
+        print("direction: {}".format(self.direction))
         for i in range(W.num):
             for j in range(T.num):
                 di = T.units[j].position - W.units[i].position
-                if di.dot(direction) / np.linalg.norm(di) > 0.9975:   # cos theta
+                if di.dot(self.direction) / np.linalg.norm(di) > 0.9975:   # cos theta
                     W.units[i].NTL_central.append({"id":j})
-                if di.dot(direction) / np.linalg.norm(di) > 0.985:   # cos theta
+                if di.dot(self.direction) / np.linalg.norm(di) > 0.985:   # cos theta
                     W.units[i].NTL.append({"id":j})
             print("NeighborTL_central {}: {}".format(i, W.units[i].NTL_central))
             print("NeighborTL {}: {}".format(i, W.units[i].NTL))

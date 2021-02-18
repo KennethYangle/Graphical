@@ -65,4 +65,8 @@ class Theater:
         plt.show()
         WL_positions = self.gta.WL.getPositionsList()
         TL_positions = self.gta.TL.getPositionsList()
-        self.rfly.render([[w[0], w[1], -w[2]] for w in WL_positions], [[t[0], t[1], -t[2]] for t in TL_positions], self.gta.algs.tree_result)
+        self.rfly.render([[w[0], w[1], -w[2]] for w in WL_positions], 
+                         [[t[0], t[1], -t[2]] for t in TL_positions], 
+                         np.arctan2(self.gta.algs.direction[1], 
+                         self.gta.algs.direction[0]), 
+                         self.gta.algs.tree_result)

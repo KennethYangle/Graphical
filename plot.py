@@ -63,4 +63,4 @@ class Theater:
         # self.ax.set_ylim(-50, 100)
         self.fig.savefig("1.png", dpi=600)
         plt.show()
-        self.rfly.render(self.gta.WL.getPositionsList())
+        self.rfly.render(self.gta.WL.getPositionsList(), self.gta.TL.getPositionsList())

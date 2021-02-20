@@ -52,4 +52,11 @@ class RFly:
             self.draw_line(200+i, results[i][0], results[i][1])
 
         # episode
-        
+        while True:
+            for i in range(len(results)):
+                start = results[i][0]
+                end = results[i][1]
+                start_id = start.id
+                start.position += 0.001*(end.position - start.position)
+                start = np.array([start.position[0], start.position[1], -start.position[2]])
+                self.mav.sendUE4Pos(wlid_rflyid_mp[start_id], 3, 0, [WL.units[i].position[0], WL.units[i].position[1], -WL.units[i].position[2]], [0,0,init_yaw])

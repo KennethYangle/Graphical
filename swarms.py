@@ -79,6 +79,7 @@ class List(Swarm):
 
         self.category = category
         self.units = list()
+        self.id_map = dict()
         self.num = 0
         self.center = np.array([0., 0., 0.])
 

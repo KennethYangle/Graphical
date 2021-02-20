@@ -19,18 +19,22 @@ class Algorithm:
             # T.units = H.drones
             for d in H.drones:
                 T.units.append(Unit(d, d.id, "Task"))
+                T.id_map[d.id] = T.units[-1]
             # W.units = I.drones
             for d in I.drones:
                 W.units.append(Unit(d, d.id, "Worker"))
+                W.id_map[d.id] = W.units[-1]
         elif len_I < len_H:
             t = (len_H - 1) // len_I + 1
             # T.units = H.drones
             for d in H.drones:
                 T.units.append(Unit(d, d.id, "Task"))
+                T.id_map[d.id] = T.units[-1]
             cnt = 0
             for k in range(t):
                 for i in range(len_I):
                     W.units.append(Unit(I.drones[i], cnt, "Worker"))
+                    W.id_map[cnt] = W.units[-1]
                     cnt += 1
                     if cnt >= len_H:
                         break
@@ -42,6 +46,7 @@ class Algorithm:
             for k in range(t):
                 for i in range(len_H):
                     T.units.append(Unit(H.drones[i], cnt, "Task"))
+                    T.id_map[cnt] = T.units[-1]
                     cnt += 1
                     if cnt >= len_I:
                         break
@@ -50,6 +55,7 @@ class Algorithm:
             # W.units = I.drones
             for d in I.drones:
                 W.units.append(Unit(d, d.id, "Worker"))
+                W.id_map[d.id] = W.units[-1]
 
         return T, W
 

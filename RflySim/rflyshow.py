@@ -41,22 +41,39 @@ class RFly:
         Scale = [np.linalg.norm(start - end), 0.1, 0.1]
         self.mav.sendUE4PosScale(id, 207, 0, PosE, AngEuler, Scale)
 
+    def delete(self, id):
+        # give an undefined type or infinite far pos
+        self.mav.sendUE4Pos(id, 12321, 0, [0,0,0], [0,0,0])
+
     def render(self, WL, TL, init_yaw, results):
-        wlid_rflyid_mp = dict()     # {unit.id: rflysim.id}
+        wlid_rflyid_mp = dict()     # {WLunit.id: rflysim.id}
         for i in range(len(WL.units)):
             self.mav.sendUE4Pos(i, 3, 0, [WL.units[i].position[0], WL.units[i].position[1], -WL.units[i].position[2]], [0,0,init_yaw])
             wlid_rflyid_mp[WL.units[i].id] = i
+        tlid_rflyid_mp = dict()     # {TLunit.id: rflysim.id}
         for i in range(len(TL.units)):
             self.mav.sendUE4Pos(100+i, 5, 0, [TL.units[i].position[0], TL.units[i].position[1], -TL.units[i].position[2]], [0,0,np.pi+init_yaw])
+            tlid_rflyid_mp[TL.units[i].id] = 100+i
         for i in range(len(results)):
             self.draw_line(200+i, results[i][0], results[i][1])
 
+        # delete line
+        time.sleep(20)
+        for i in range(len(results)):
+            self.delete(200+i)
+
         # episode
+        K = 1
+        v_max = 20
         while True:
             for i in range(len(results)):
                 start = results[i][0]
                 end = results[i][1]
-                start_id = start.id
-                start.position += 0.001*(end.position - start.position)
-                start = np.array([start.position[0], start.position[1], -start.position[2]])
-                self.mav.sendUE4Pos(wlid_rflyid_mp[start_id], 3, 0, [WL.units[i].position[0], WL.units[i].position[1], -WL.units[i].position[2]], [0,0,init_yaw])
+                if np.linalg.norm(end.position - start.position) < 1:     # reach
+                    self.delete(tlid_rflyid_mp[end.id])
+
+                v_cmd = K * (end.position - start.position)
+                if (v_norm := np.linalg.norm(v_cmd)) > v_max:
+                    v_cmd = v_cmd / v_norm * v_max
+                start.position += 0.01 * v_cmd
+                self.mav.sendUE4Pos(wlid_rflyid_mp[start.id], 3, 0, [WL.units[i].position[0], WL.units[i].position[1], -WL.units[i].position[2]], [0,-np.linalg.norm(v_cmd)/100*np.pi/4,init_yaw])

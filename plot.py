@@ -33,7 +33,7 @@ class Theater:
                 self.ax.plot([r.val.position[0], c.val.position[0]], 
                              [r.val.position[1], c.val.position[1]], 
                              [r.val.position[2], c.val.position[2]],
-                             color='gray')
+                             color='c')
 
 
     def view_result(self, results):
@@ -60,7 +60,12 @@ class Theater:
         self.ax.set_xlabel('X')
         self.ax.set_ylabel('Y')
         self.ax.set_zlabel('Z')
+        # self.ax.view_init(elev=60,azim=45)
         # self.ax.set_ylim(-50, 100)
+        self.ax.grid(False)
+        self.ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+        self.ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+        self.ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
         self.fig.savefig("1.png", dpi=600)
         plt.show()
         self.rfly.render(self.gta.WL, 

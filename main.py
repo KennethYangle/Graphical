@@ -25,7 +25,7 @@ class GTA:
         self.G = self.WL.ConstructGraph()
         print(self.G)
         self.algs.GetNeighborhood(self.TL, self.WL)
-        self.algs.CalcPayoff(self.TL, self.WL, M=200)
+        self.algs.CalcPayoff(self.TL, self.WL, M=500)
         self.algs.SolveGG(self.TL, self.WL)
 
     def main(self):

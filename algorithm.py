@@ -92,9 +92,10 @@ class Algorithm:
             print("NeighborTL {}: {}".format(i, W.units[i].NTL))
 
     def CalcPayoff(self, T, W, M):
+        self.M = M
         for i in range(W.num):
             for t in W.units[i].NTL:
-                t["payoff"] = M - np.linalg.norm(W.units[i].position - T.units[t["id"]].position)
+                t["payoff"] = self.M - np.linalg.norm(W.units[i].position - T.units[t["id"]].position)
             print("NeighborTL {}: {}".format(i, W.units[i].NTL))
 
     def CalcCE(self, u: Unit, W):
@@ -221,6 +222,9 @@ class Algorithm:
             print()
 
         # Solve Tree
+        Coverage = 0
+        GlobalPayoff = 0
+
         stash = deque()
         stash.append(root)
         root.parent_select = []
@@ -231,6 +235,8 @@ class Algorithm:
             # r.parent_select = previous_select
             r_select = self.CalcCETree(r, W)
             if r_select is not None:
+                Coverage += 1
+                GlobalPayoff += self.M - np.linalg.norm(r.val.position - T.units[r_select].position)
                 self.tree_result.append([r.val, T.units[r_select]])
                 previous_select.append(r_select)
             for c in r.children:
@@ -243,6 +249,7 @@ class Algorithm:
                 # c.parent_select = previous_select.copy()    # shallow copy
                 stash.append(c)
         print()
+        print("Coverage: {}\nGlobalPayoff: {}".format(Coverage, GlobalPayoff))
 
 
 class TreeNode:

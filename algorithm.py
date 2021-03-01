@@ -98,6 +98,20 @@ class Algorithm:
                 t["payoff"] = self.M - np.linalg.norm(W.units[i].position - T.units[t["id"]].position)
             print("NeighborTL {}: {}".format(i, W.units[i].NTL))
 
+    def Hungarian(self, T, W):
+        from scipy.optimize import linear_sum_assignment
+        payoffmat = np.zeros((T.num, W.num))
+        print("shape:", payoffmat.shape)
+        for i in range(W.num):
+            for j in range(T.num):
+                payoffmat[i][j] = self.M - np.linalg.norm(W.units[i].position - T.units[j].position)
+        cost = -payoffmat
+        row_ind, col_ind = linear_sum_assignment(cost)
+        print("Hungarian result: {}".format(col_ind))
+        GlobalPayoff = -cost[row_ind, col_ind].sum()
+        print("Hungarian GlobalPayoff: {}".format(GlobalPayoff))
+        print()
+
     def CalcCE(self, u: Unit, W):
         per = permutations([i for i in range(len(u.NTL_central))], len(u.NWL))  # p[i] means u.NWL[i]["id"] choose u.NTL_central[p[i]]
         maxv = -1e10

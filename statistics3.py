@@ -2,28 +2,39 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-data = [[95, 90, 90, 92, 90, 87, 96, 92, 98, 100],
-        [90, 87, 90, 88, 85, 87, 96, 92, 98, 92],
-        [90, 83, 85, 88, 85, 87, 96, 92, 98, 92],
-        [80, 87, 90, 82, 85, 87, 96, 92, 94, 92],
-        [80, 87, 80, 82, 85, 82, 96, 92, 94, 92]]
-labels = [10, 20, 30, 40, 50]
+fontsize = 16
+data = [[88, 88, 86, 88, 90, 92, 96, 92, 84, 92],
+        [92, 98, 96, 98, 98, 92, 92, 92, 88, 100],
+        [100, 96, 98, 98, 96, 100, 100, 100, 100, 98],
+        [100, 100, 100, 98, 100, 100, 100, 100, 100, 100,
+         100, 100, 100, 98, 100, 100, 100, 100, 100, 100,
+         100, 100, 100, 98, 100, 100, 100, 100, 100, 100,
+         100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+         100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+        [100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+         100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+         100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+         100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+         100, 100, 100, 100, 100, 100, 100, 100, 100, 100]]
+labels = [1, 2, 3, 4, 5]
 ax2x = [1, 2, 3, 4, 5]
-ratios = [90, 85, 92, 93, 95]
+ave = [np.average(a) for a in data]
+print(ave)
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.boxplot(data, labels=labels, showmeans=True, patch_artist=True)
 ax.grid(linestyle="--", alpha=0.3)
-ax.set_xlabel("The number of WLs")
-ax.set_ylabel("Coverage rate (%)")
+ax.set_xlabel("Reallocation times", size=fontsize)
+ax.set_ylabel("Coverage rate (%)", size=fontsize)
 ax.set_ylim(78, 102)
+ax.tick_params(axis='both', which='major', labelsize=fontsize)
 
 ax2 = ax.twinx()
-ax2.plot(ax2x, ratios, color="c")
-ax2.set_ylabel("Average return ratio (%)")
+ax2.plot(ax2x, ave, color="c", linewidth=3)
 ax2.set_ylim(78, 102)
-# ax2.axes.yaxis.set_visible(False)       # hide y axis, open when plot average
+ax2.axes.yaxis.set_visible(False)       # hide y axis, open when plot average
+ax2.tick_params(axis='both', which='major', labelsize=fontsize)
 
-plt.savefig("31.png", dpi=600)
+plt.savefig("33.png", dpi=1200)
 plt.show()

@@ -3,14 +3,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 fontsize = 16
-data = [[95, 90, 90, 92, 90, 87, 96, 92, 98, 100],
-        [90, 87, 90, 88, 85, 87, 96, 92, 98, 92],
-        [90, 83, 85, 88, 85, 87, 96, 92, 98, 92],
-        [80, 87, 90, 82, 85, 87, 96, 92, 94, 92],
-        [80, 87, 80, 82, 85, 82, 96, 92, 94, 92]]
+data = [[80, 70, 80, 90, 90, 80, 80, 80, 100, 80],
+        [85, 80, 90, 85, 85, 80, 95, 95, 80, 80],
+        [90, 83.33, 86.66, 90, 96.66, 86.66, 93.33, 90, 100, 93.33],
+        [92.5, 87.5, 90, 92, 93, 87.5, 97.5, 92.5, 95, 92],
+        [88, 88, 86, 88, 90, 92, 96, 92, 84, 92]]
 labels = [10, 20, 30, 40, 50]
 ax2x = [1, 2, 3, 4, 5]
-ratios = [90, 85, 92, 93, 95]
+ratios = [1101/1344*100, 2524/3055*100, 3928/4455*100, 5042/5464*100, 5924/6910*100]
+ave = [np.average(a) for a in data]
+print(ave)
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
@@ -22,7 +24,7 @@ ax.set_ylim(78, 102)
 ax.tick_params(axis='both', which='major', labelsize=fontsize)
 
 ax2 = ax.twinx()
-ax2.plot(ax2x, ratios, color="c")
+ax2.plot(ax2x, ratios, color="c", linewidth=3)
 ax2.set_ylabel("Average return ratio (%)", size=fontsize)
 ax2.set_ylim(78, 102)
 ax2.tick_params(axis='both', which='major', labelsize=fontsize)

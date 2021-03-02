@@ -10,7 +10,7 @@ class Theater:
         self.gta = gta
         self.fig = plt.figure(1)
         self.ax = plt.axes(projection='3d')
-        # self.rfly = RFly()
+        self.rfly = RFly()
 
     def view_graph(self):
         for i in range(self.gta.WL.num):
@@ -67,8 +67,9 @@ class Theater:
         self.ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
         self.fig.savefig("1.png", dpi=600)
         plt.show()
-        # self.rfly.render(self.gta.WL, 
-        #                  self.gta.TL, 
-        #                  np.arctan2(self.gta.algs.direction[1], 
-        #                  self.gta.algs.direction[0]), 
-        #                  self.gta.algs.tree_result)
+        self.rfly.render(self.gta.WL, 
+                         self.gta.TL, 
+                         np.arctan2(self.gta.algs.direction[1], 
+                         self.gta.algs.direction[0]), 
+                         self.gta.algs.tree_result,
+                         self.gta.algs.tree)

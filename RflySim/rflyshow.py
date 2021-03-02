@@ -6,7 +6,7 @@ import cv2.cv2 as cv2
 from pymavlink.dialects.v20 import common as mavlink2
 import win32gui, win32ui, win32con
 from ctypes import windll
-import sys
+import sys, os
 from collections import deque
 
 # import RflySim APIs
@@ -69,11 +69,12 @@ class RFly:
             r = stash.popleft()
             for c in r.children:
                 stash.append(c)
-                self.draw_line(300+branch_cnt, 27, r.val, c.val)
+                self.draw_line(300+branch_cnt, 207, r.val, c.val)
                 branch_cnt += 1
 
         # delete line
-        time.sleep(30)
+        # time.sleep(30)
+        os.system('pause')
         for i in range(len(results)):
             self.delete(200+i)
         for i in range(branch_cnt):

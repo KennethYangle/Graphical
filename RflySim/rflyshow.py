@@ -46,7 +46,7 @@ class RFly:
         # give an undefined type or infinite far pos
         self.mav.sendUE4Pos(id, 12321, 0, [0,0,0], [0,0,0])
 
-    def render(self, WL, TL, init_yaw, results, tree):
+    def render(self, WL, TL, init_yaw, results, tree, direction):
         # view WLs
         wlid_rflyid_mp = dict()     # {WLunit.id: rflysim.id}
         for i in range(len(WL.units)):
@@ -83,15 +83,26 @@ class RFly:
         # episode
         K = 1
         v_max = 20
+        direction = -direction
+        reached_TL = []
         while True:
+            # tasks move
+            for i in range(len(TL.units)):
+                if i not in reached_TL:
+                    TL.units[i].position += 0.05 * direction
+                    self.mav.sendUE4Pos(100+i, 5, 0, [TL.units[i].position[0], TL.units[i].position[1], -TL.units[i].position[2]], [0,0,np.pi+init_yaw])
+            # workers move
             for i in range(len(results)):
                 start = results[i][0]
                 end = results[i][1]
                 if np.linalg.norm(end.position - start.position) < 1:     # reach
+                    reached_TL.append(tlid_rflyid_mp[end.id]-100)
                     self.delete(tlid_rflyid_mp[end.id])
 
                 v_cmd = K * (end.position - start.position)
                 if (v_norm := np.linalg.norm(v_cmd)) > v_max:
                     v_cmd = v_cmd / v_norm * v_max
                 start.position += 0.01 * v_cmd
+
+                if wlid_rflyid_mp[start.id] == 1: continue
                 self.mav.sendUE4Pos(wlid_rflyid_mp[start.id], 3, 0, [WL.units[i].position[0], WL.units[i].position[1], -WL.units[i].position[2]], [0,-np.linalg.norm(v_cmd)/100*np.pi/4,init_yaw])

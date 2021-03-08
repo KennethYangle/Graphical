@@ -72,4 +72,5 @@ class Theater:
                          np.arctan2(self.gta.algs.direction[1], 
                          self.gta.algs.direction[0]), 
                          self.gta.algs.tree_result,
-                         self.gta.algs.tree)
+                         self.gta.algs.tree,
+                         self.gta.algs.direction)

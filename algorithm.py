@@ -184,7 +184,16 @@ class Algorithm:
 
         if maxp is not None:
             print("unit {} choose task {}".format(r.val.id, tasks[maxp[0]]))
-            return tasks[maxp[0]]
+            return True, tasks[maxp[0]]
+        else:
+            maxc, maxi = 0, 0
+            for i, a in enumerate(r.val.NTL):
+                # print(a)
+                if a["payoff"] > maxc:
+                    maxc = a["payoff"]
+                    maxi = i
+            return False, r.val.NTL[maxi]["id"]
+
 
     def SolveGG(self, T, W):
         for i in range(W.num):
@@ -247,12 +256,13 @@ class Algorithm:
             r = stash.popleft()
             # # global share
             # r.parent_select = previous_select
-            r_select = self.CalcCETree(r, W)
+            is_success, r_select = self.CalcCETree(r, W)
             if r_select is not None:
-                Coverage += 1
-                GlobalPayoff += self.M - np.linalg.norm(r.val.position - T.units[r_select].position)
+                if is_success:
+                    Coverage += 1
+                    GlobalPayoff += self.M - np.linalg.norm(r.val.position - T.units[r_select].position)
+                    previous_select.append(r_select)
                 self.tree_result.append([r.val, T.units[r_select]])
-                previous_select.append(r_select)
             for c in r.children:
                 # # parent share
                 # c.parent_select = r.parent_select

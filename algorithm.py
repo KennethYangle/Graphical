@@ -280,6 +280,11 @@ class Algorithm:
         print()
         print("Coverage: {}\nGlobalPayoff: {}".format(Coverage, GlobalPayoff))
 
+    def Reallocation(self, T, W):
+        self.reallocation = [[T.units[40], T.units[44]],
+                             [T.units[2],  T.units[3]],
+                             [T.units[0],  T.units[38]],
+                             [T.units[14], T.units[46]],]
 
 class TreeNode:
     def __init__(self, val=None, children=list()):

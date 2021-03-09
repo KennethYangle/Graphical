@@ -28,6 +28,8 @@ class GTA:
         self.algs.CalcPayoff(self.TL, self.WL, M=500)
         self.algs.Hungarian(self.TL, self.WL)
         self.algs.SolveGG(self.TL, self.WL)
+        for j in range(1):
+            self.algs.Reallocation(self.TL, self.WL)
 
     def main(self):
         from plot import Theater

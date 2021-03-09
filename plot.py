@@ -65,7 +65,7 @@ class Theater:
         self.ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
         self.ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
         self.ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
-        self.fig.savefig("1.png", dpi=600)
+        self.fig.savefig("Hungarian.png", dpi=600)
         plt.show()
         self.rfly.render(self.gta.WL, 
                          self.gta.TL, 

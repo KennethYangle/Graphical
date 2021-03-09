@@ -52,9 +52,9 @@ class Theater:
         self.ax.scatter(self.gta.WL.center[0], self.gta.WL.center[1], self.gta.WL.center[2], marker="^")
         
         # self.view_graph()
-        # self.view_tree()
-        self.view_result(self.gta.algs.hungarian_result)
-        # self.view_result(self.gta.algs.tree_result)
+        self.view_tree()
+        # self.view_result(self.gta.algs.hungarian_result)
+        self.view_result(self.gta.algs.tree_result)
 
         self.ax.set_xlabel('X')
         self.ax.set_ylabel('Y')
@@ -65,7 +65,7 @@ class Theater:
         self.ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
         self.ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
         self.ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
-        self.fig.savefig("Hungarian.png", dpi=600)
+        self.fig.savefig("1.png", dpi=600)
         plt.show()
         self.rfly.render(self.gta.WL, 
                          self.gta.TL, 

@@ -36,5 +36,6 @@ ax2.set_ylim(78, 102)
 ax2.axes.yaxis.set_visible(False)       # hide y axis, open when plot average
 ax2.tick_params(axis='both', which='major', labelsize=fontsize)
 
+plt.tight_layout()
 plt.savefig("33.png", dpi=1200)
 plt.show()

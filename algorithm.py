@@ -99,6 +99,7 @@ class Algorithm:
             print("NeighborTL {}: {}".format(i, W.units[i].NTL))
 
     def Hungarian(self, T, W):
+        self.hungarian_result = list()
         from scipy.optimize import linear_sum_assignment
         payoffmat = np.zeros((T.num, W.num))
         print("shape:", payoffmat.shape)
@@ -108,6 +109,10 @@ class Algorithm:
         cost = -payoffmat
         row_ind, col_ind = linear_sum_assignment(cost)
         print("Hungarian result: {}".format(col_ind))
+
+        for i in range(len(col_ind)):
+            self.hungarian_result.append([T.units[row_ind[i]], W.units[col_ind[i]]])
+
         GlobalPayoff = -cost[row_ind, col_ind].sum()
         print("Hungarian GlobalPayoff: {}".format(GlobalPayoff))
         print()

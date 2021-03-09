@@ -52,9 +52,9 @@ class Theater:
         self.ax.scatter(self.gta.WL.center[0], self.gta.WL.center[1], self.gta.WL.center[2], marker="^")
         
         # self.view_graph()
-        self.view_tree()
-        # self.view_result(self.gta.algs.direct_result)
-        self.view_result(self.gta.algs.tree_result)
+        # self.view_tree()
+        self.view_result(self.gta.algs.hungarian_result)
+        # self.view_result(self.gta.algs.tree_result)
 
         self.ax.set_xlabel('X')
         self.ax.set_ylabel('Y')

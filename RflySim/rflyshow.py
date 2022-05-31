@@ -1,12 +1,7 @@
 # import required libraries
 import time
-import mmap
 import numpy as np
-import cv2.cv2 as cv2
-from pymavlink.dialects.v20 import common as mavlink2
-import win32gui, win32ui, win32con
-from ctypes import windll
-import sys, os
+import os
 from collections import deque
 
 # import RflySim APIs

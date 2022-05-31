@@ -1,0 +1,26 @@
+## 一、环境
+* `RflySim`仿真环境（可选，SITL仿真需要）
+* `Python`环境（推荐Anaconda）中安装`pymavlink`
+
+
+## 二、SITL仿真
+### 1. 启动`RflySim`场景
+双击`RflySim\GTASITL.bat`
+
+### 2. 启动分配算法
+```
+python main.py
+```
+分配结果计算完成后会在终端打印统计信息，弹出示意图。
+
+关掉图片之后，`RflySim`里也会创建对应的飞机和直接的关系。拖动到合适的视角，`Ctrl+滚轮放大飞机`，`S`键打开编号，即可得到论文中的效果。
+
+终端按下任意键开始运动效果。
+
+
+## 三、外部调用
+仿照`main.py`。目前使用随机数种子在给定区域内随机生成我方集群和目标集群的位置。
+
+如果有已知的位置信息，通过`self.IS.drones[i].position`为第`i`架拦截者赋值，通过`self.HS.drones[i].position`为第`i`架入侵者赋值。
+
+结果在`self.gta.algs.tree_result`，解包方法参考`plot.py`。

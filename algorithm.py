@@ -84,10 +84,12 @@ class Algorithm:
         for i in range(W.num):
             for j in range(T.num):
                 di = T.units[j].position - W.units[i].position
-                if di.dot(self.direction) / np.linalg.norm(di) > 0.9975:   # cos theta
-                    W.units[i].NTL_central.append({"id":j})
-                if di.dot(self.direction) / np.linalg.norm(di) > 0.985:   # cos theta
-                    W.units[i].NTL.append({"id":j})
+                # if di.dot(self.direction) / np.linalg.norm(di) > 0.9975:   # cos theta
+                #     W.units[i].NTL_central.append({"id":j})
+                # if di.dot(self.direction) / np.linalg.norm(di) > 0.985:   # cos theta
+                #     W.units[i].NTL.append({"id":j})
+                W.units[i].NTL_central.append({"id":j})
+                W.units[i].NTL.append({"id":j})
             print("NeighborTL_central {}: {}".format(i, W.units[i].NTL_central))
             print("NeighborTL {}: {}".format(i, W.units[i].NTL))
 

@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 from main import GTA
 from collections import deque
-from RflySim.rflyshow import RFly
+# from RflySim.rflyshow import RFly
 
 class Theater:
     def __init__(self, gta):
         self.gta = gta
         self.fig = plt.figure(1)
         self.ax = plt.axes(projection='3d')
-        self.rfly = RFly()
+        # self.rfly = RFly()
 
     def view_graph(self):
         for i in range(self.gta.WL.num):
@@ -55,7 +55,7 @@ class Theater:
         self.view_tree()
         # self.view_result(self.gta.algs.hungarian_result)
         self.view_result(self.gta.algs.tree_result)
-        self.view_result(self.gta.algs.reallocation)
+        # self.view_result(self.gta.algs.reallocation)
 
         self.ax.set_xlabel('X')
         self.ax.set_ylabel('Y')
@@ -68,10 +68,10 @@ class Theater:
         self.ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
         self.fig.savefig("reallocate.png", dpi=600)
         plt.show()
-        self.rfly.render(self.gta.WL, 
-                         self.gta.TL, 
-                         np.arctan2(self.gta.algs.direction[1], 
-                         self.gta.algs.direction[0]), 
-                         self.gta.algs.tree_result,
-                         self.gta.algs.tree,
-                         self.gta.algs.direction)
+        # self.rfly.render(self.gta.WL, 
+        #                  self.gta.TL, 
+        #                  np.arctan2(self.gta.algs.direction[1], 
+        #                  self.gta.algs.direction[0]), 
+        #                  self.gta.algs.tree_result,
+        #                  self.gta.algs.tree,
+        #                  self.gta.algs.direction)

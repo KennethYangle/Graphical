@@ -1,29 +1,40 @@
 import numpy as np
 
 class Drone:
-    def __init__(self, id, camp="", mu=[2.,3.,4.], sigma=[[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]]):
+    def __init__(self, id, camp="", mu=[2.,3.,4.], sigma=[[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]], drone_pos=None):
         self.id = id
         self.camp = camp
-        self.mu = mu
-        self.sigma = sigma
-        self.position = np.random.multivariate_normal(self.mu, self.sigma)
+        if drone_pos is not None:
+            self.position = np.array(drone_pos)
+        else:
+            self.mu = mu
+            self.sigma = sigma
+            self.position = np.random.multivariate_normal(self.mu, self.sigma)
 
     def __str__(self):
         return "id: {}; position: {};".format(self.id, self.position)
 
 
 class Swarm:
-    def __init__(self, num, camp="", area=[[0,0,10],[50,50,50]], sigma=[[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]], R=30):
+    def __init__(self, num, camp="", area=[[0,0,10],[50,50,50]], sigma=[[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]], R=30, swarm_pos=None):
         self.num = num
         self.camp = camp
         self.area = area
         self.sigma = sigma
-        self.R = R
+        if isinstance(R, float) or isinstance(R, int):
+            self.R = [R for i in range(num)]
+        elif isinstance(R, list) or isinstance(R, np.ndarray):
+            self.R = R
         self.drones = list()
-        for i in range(self.num):
-            mu = [np.random.uniform(area[0][0], area[1][0]), np.random.uniform(area[0][1], area[1][1]), np.random.uniform(area[0][2], area[1][2])]
-            drone = Drone(id=i, camp=self.camp, mu=mu, sigma=self.sigma)
-            self.drones.append(drone)
+        if swarm_pos is not None:
+            for i in range(self.num):
+                drone = Drone(id=i, camp=self.camp, drone_pos=swarm_pos[i])
+                self.drones.append(drone)
+        else:
+            for i in range(self.num):
+                mu = [np.random.uniform(area[0][0], area[1][0]), np.random.uniform(area[0][1], area[1][1]), np.random.uniform(area[0][2], area[1][2])]
+                drone = Drone(id=i, camp=self.camp, mu=mu, sigma=self.sigma)
+                self.drones.append(drone)
         if self.camp == "Interceptor":
             self.G0 = self.ConstructGraph()
 
@@ -40,10 +51,10 @@ class Swarm:
         G = [[0 for i in range(self.num)] for j in range(self.num)]
         for i in range(self.num):
             G[i][i] = 1
-            for j in range(i+1, self.num):
+            for j in range(self.num):
                 d = np.linalg.norm(self.drones[i].position - self.drones[j].position)
-                if d < self.R:
-                    G[i][j] = G[j][i] = 1
+                if d < self.R[i]:
+                    G[i][j] = 1
         return G
 
 
@@ -51,8 +62,8 @@ class Unit(Drone):
     def __init__(self, drone, id, category=""):
         self.parent_id = drone.id
         self.camp = drone.camp
-        self.mu = drone.mu
-        self.sigma = drone.sigma
+        # self.mu = drone.mu
+        # self.sigma = drone.sigma
         self.position = drone.position
         self.id = id
         self.NWL = list()
@@ -94,21 +105,21 @@ class List(Swarm):
         G = [[0 for i in range(self.num)] for j in range(self.num)]
         for i in range(self.num):
             G[i][i] = 1
-            for j in range(i+1, self.num):
-                d = np.linalg.norm(self.units[i].position - self.units[j].position)
-                if d < self.R:
-                    G[i][j] = G[j][i] = 1
-            # check isolate dot
-            cnt = 0
             for j in range(self.num):
-                if G[i][j] == 1:
-                    cnt += 1
-                    break
-            if cnt <= 2:    # isolate
-                for j in range(self.num):
-                    d = np.linalg.norm(self.units[i].position - self.units[j].position)
-                    if d < 1.1*self.R:
-                        G[i][j] = G[j][i] = 1
+                d = np.linalg.norm(self.units[i].position - self.units[j].position)
+                if d < self.R[i]:
+                    G[i][j] = 1
+            # # check isolate dot
+            # cnt = 0
+            # for j in range(self.num):
+            #     if G[i][j] == 1:
+            #         cnt += 1
+            #         break
+            # if cnt <= 2:    # isolate
+            #     for j in range(self.num):
+            #         d = np.linalg.norm(self.units[i].position - self.units[j].position)
+            #         if d < 1.1*self.R:
+            #             G[i][j] = G[j][i] = 1
         self.G = G
         return G
 

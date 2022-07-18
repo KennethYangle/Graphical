@@ -14,8 +14,8 @@ sys.stdout = Logger()
 
 class GTA:
     def __init__(self):
-        self.IS = Swarm(50, camp="Interceptor", area=[[0,0,220],[100,100,300]])
-        self.HS = Swarm(50, camp="Hostile", area=[[200,200,220],[400,400,300]])
+        self.IS = Swarm(20, camp="Interceptor", area=[[0,0,220],[100,100,300]], R=50)
+        self.HS = Swarm(20, camp="Hostile", area=[[200,200,220],[400,400,300]], R=50)
         print(self.IS)
         print(self.HS)
         self.algs = Algorithm()
@@ -28,8 +28,8 @@ class GTA:
         self.algs.CalcPayoff(self.TL, self.WL, M=500)
         self.algs.Hungarian(self.TL, self.WL)
         self.algs.SolveGG(self.TL, self.WL)
-        for j in range(1):
-            self.algs.Reallocation(self.TL, self.WL)
+        # for j in range(1):
+        #     self.algs.Reallocation(self.TL, self.WL)
 
     def main(self):
         from plot import Theater

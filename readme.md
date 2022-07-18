@@ -19,8 +19,16 @@ python main.py
 
 
 ## 三、外部调用
-仿照`main.py`。目前使用随机数种子在给定区域内随机生成我方集群和目标集群的位置。
+```
+# 示例
+python main_ly.py
+# 或者调用其中函数
+useGTA(Pcur, ViewR, p_search)
+```
+输入：
+* 各无人机位置`Pcur`，np.ndarray或list类型，尺寸 Nx3
+* 观测半径`ViewR`，np.ndarray或list类型，尺寸 Nx1
+* 待搜索坐标列表`p_search`，np.ndarray或list类型，尺寸 mx3
 
-如果有已知的位置信息，通过`self.IS.drones[i].position`为第`i`架拦截者赋值，通过`self.HS.drones[i].position`为第`i`架入侵者赋值。
-
-结果在`self.gta.algs.tree_result`，解包方法参考`plot.py`。
+输出：
+* 每一架无人机下一个目标位置`p_next`，np.ndarray或list类型，尺寸 Nx3

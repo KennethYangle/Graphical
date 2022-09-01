@@ -226,6 +226,7 @@ class Algorithm:
         close_table = []
         while len(open_table) != 0:
             r = open_table.popleft()
+            r.children = list()
             close_table.append(r)
             cnt = 0
             for i in range(W.num):

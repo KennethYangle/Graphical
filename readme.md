@@ -32,3 +32,7 @@ useGTA(Pcur, ViewR, p_search)
 
 输出：
 * 每一架无人机下一个目标位置`p_next`，np.ndarray或list类型，尺寸 Nx3
+
+
+## 四、UDP调用
+`main_UDP.py`和`UDP_test.py`，从9797端口输入数据，从9798端口返回结果

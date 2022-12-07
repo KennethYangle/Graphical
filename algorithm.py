@@ -110,13 +110,13 @@ class Algorithm:
                 payoffmat[i][j] = self.M - np.linalg.norm(W.units[i].position - T.units[j].position)
         cost = -payoffmat
         row_ind, col_ind = linear_sum_assignment(cost)
-        print("Hungarian result: {}".format(col_ind))
+        # print("Hungarian result: {}".format(col_ind))
 
         for i in range(len(col_ind)):
             self.hungarian_result.append([T.units[row_ind[i]], W.units[col_ind[i]]])
 
         GlobalPayoff = -cost[row_ind, col_ind].sum()
-        print("Hungarian GlobalPayoff: {}".format(GlobalPayoff))
+        print("GlobalPayoff: {}".format(GlobalPayoff))
         print()
 
     def CalcCE(self, u: Unit, W):

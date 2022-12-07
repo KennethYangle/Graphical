@@ -13,6 +13,7 @@ from logger import Logger
 sys.stdout = Logger()
 
 import socket
+import struct
 import time
 import json
 
@@ -31,52 +32,50 @@ def useGTA(Pcur, ViewR, p_search):
     print(G)
     algs.GetNeighborhood(TL, WL)
     algs.CalcPayoff(TL, WL, M=500)
-    # algs.Hungarian(TL, WL)
-    algs.SolveGG(TL, WL)
-
+    algs.Hungarian(TL, WL)
     p_next = [0 for i in range(N)]
-    for r in algs.tree_result:
-        p_next[r[0].parent_id] = HS.drones[r[1].parent_id].position
+    for r in algs.hungarian_result:
+        print(r[1].id, r[0].id)
+        p_next[r[1].id] = TL.units[r[0].id].position
     return np.array(p_next)
 
 
 if __name__ == "__main__":
-    # Pcur = np.array([[82863,90452,3000], [84972,90727,3000]])
-    # p_search = np.array([[85407,90794,3000], [12699,91338,3000], [63236,9755,3000]])
-    # N = max(np.size(Pcur, 0), np.size(p_search, 0))
-    # ViewR = np.array([4000 for i in range(N)])
-    # p_next = useGTA(Pcur, ViewR, p_search)
-    # print(p_next)
-
-    # Pcur = np.array([[1,2,0], [3,4,0], [5,6,0], [7,8,0], [8,7,0], [6,5,0], [4,3,0], [2,1,0]])
-    # p_search = np.array([[10,20,0], [15,10,0], [20,15,0], [20,30,0], [25,15,0], [20,10,0]])
-    # N = max(np.size(Pcur, 0), np.size(p_search, 0))
-    # ViewR = np.array([3 for i in range(N)])
-    # p_next = useGTA(Pcur, ViewR, p_search)
-    # print(p_next)
-
-    # Pcur = np.array([[1,2,0], [3,4,0], [5,6,0], [7,8,0], [8,7,0], [6,5,0], [4,3,0], [2,1,0]])
-    # p_search = np.array([[10,20,0], [15,10,0], [20,15,0], [20,30,0], [25,15,0], [20,10,0]])
-    # N = max(np.size(Pcur, 0), np.size(p_search, 0))
-    # ViewR = np.array([3 for i in range(N)])
-    # p_next = useGTA(Pcur, ViewR, p_search)
-    # print(p_next)
-
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(("localhost", 9797))
 
     while True:
         # 接收数据
-        data, addr = sock.recvfrom(1024)
+        data, addr = sock.recvfrom(8192)
+        data_raw = struct.unpack("450d", data)
+        data_np = np.reshape(data_raw, (150,3))
+        data_Pcur = data_np[:100,:]
+        data_p_search = data_np[100:,:]
+        
+        N, m = 0, 0
+        for i in range(100):
+            if not np.any(data_Pcur[i]):
+                break
+            N += 1
+        Pcur = data_Pcur[:N,:]
+        for i in range(50):
+            if not np.any(data_p_search[i]):
+                break
+            m += 1
+        p_search = data_p_search[:m,:]
+        print("Pcur:", Pcur)
+        print("p_search", p_search)
+
+        N = max(N, m)
+        ViewR = np.array([1000 for i in range(N)])
 
         # 处理数据
-        dic = json.loads(data.decode())
-        p_next = useGTA(dic["Pcur"], dic["ViewR"], dic["p_search"])
-        print(p_next)
+        p_next = useGTA(Pcur, ViewR, p_search)
+        print("p_next:", p_next)
 
         # 发送结果
-        res = {"p_next": p_next.tolist()}
-        s = json.dumps(res)
-        sock.sendto(s.encode(), ("localhost", 9798))
+        data_p_next = p_next.flatten()
+        data_p_next_raw = struct.pack(f"{len(data_p_next)}d", *data_p_next)
+        sock.sendto(data_p_next_raw, ("localhost", 9798))
         
         time.sleep(0.1)

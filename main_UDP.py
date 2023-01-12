@@ -36,7 +36,7 @@ def useGTA(Pcur, ViewR, p_search):
     p_next = [0 for i in range(N)]
     for r in algs.hungarian_result:
         print(r[1].id, r[0].id)
-        p_next[r[1].id] = TL.units[r[0].id].position
+        p_next[r[1].id] = TL.units[r[0].id].parent_id
     return np.array(p_next)
 
 
@@ -74,7 +74,10 @@ if __name__ == "__main__":
         print("p_next:", p_next)
 
         # 发送结果
-        data_p_next = p_next.flatten()
+        p_next_zeros = np.zeros(100)
+        ll = len(p_next)
+        p_next_zeros[:ll] = p_next
+        data_p_next = p_next_zeros.flatten()
         data_p_next_raw = struct.pack(f"{len(data_p_next)}d", *data_p_next)
         sock.sendto(data_p_next_raw, ("localhost", 9798))
         
